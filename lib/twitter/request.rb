@@ -46,7 +46,7 @@ module Twitter
       def make_friendly(response)
         raise_errors(response)
         data = parse(response)
-        options[:mash] ? mash(data) : data
+        #options[:mash] ? mash(data) : data
       end
       
       def raise_errors(response)
@@ -70,26 +70,7 @@ module Twitter
       end
       
       def parse(response)
-        Crack::JSON.parse(response.body)
-      end
-      
-      def mash(obj)
-        if obj.is_a?(Array)
-          obj.map { |item| make_mash_with_consistent_hash(item) }
-        elsif obj.is_a?(Hash)
-          make_mash_with_consistent_hash(obj)
-        else
-          obj
-        end
-      end
-
-      # Lame workaround for the fact that mash doesn't hash correctly
-      def make_mash_with_consistent_hash(obj)
-        m = Mash.new(obj)
-        def m.hash
-          inspect.hash
-        end
-        return m
+        JSON.parse(response.body)
       end
       
       def to_query(options)
